@@ -46,7 +46,7 @@ passport.use('local.signup', new LocalStrategy({
     });
 }));
 
-passport.use('local.signin', new LocalStrategy({
+passport.use('user.local.signin', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
@@ -54,6 +54,7 @@ passport.use('local.signin', new LocalStrategy({
     req.checkBody('email', 'Invalid email').notEmpty().isEmail();
     req.checkBody('password', 'Invalid password').notEmpty();
     var errors = req.validationErrors();
+    console.log(type);
     if (errors) {
         var messages = [];
         errors.forEach(function(error) {
@@ -71,6 +72,7 @@ passport.use('local.signin', new LocalStrategy({
         if (!user.validPassword(password)) {
             return done(null, false, {message: 'Wrong password.'});
         }
+        
         return done(null, user);
     });
 }));
