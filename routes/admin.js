@@ -1,11 +1,12 @@
 const router = require('express').Router();
+var passport = require('passport');
 
 router.get('/signin', function (req, res, next) {
     var messages = req.flash('error');
     res.render('admin/signin', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
 });
 
-router.post('/signin', passport.authenticate('local.signin', {
+router.post('/signin', passport.authenticate('admin.local.signin', {
     failureRedirect: '/admin/signin',
     failureFlash: true
 }), function (req, res, next) {

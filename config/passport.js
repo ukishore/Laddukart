@@ -17,6 +17,7 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'password',
     passReqToCallback: true
 }, function (req, email, password, done) {
+    console.log(req.body.type);
     req.checkBody('email', 'Invalid email').notEmpty().isEmail();
     req.checkBody('password', 'Invalid password').notEmpty().isLength({min:4});
     var errors = req.validationErrors();
@@ -37,6 +38,7 @@ passport.use('local.signup', new LocalStrategy({
         var newUser = new User();
         newUser.email = email;
         newUser.password = newUser.encryptPassword(password);
+        newUser.type = req.body.type;
         newUser.save(function(err, result) {
            if (err) {
                return done(err);
@@ -66,13 +68,48 @@ passport.use('user.local.signin', new LocalStrategy({
         if (err) {
             return done(err);
         }
+
         if (!user) {
             return done(null, false, {message: 'No user found.'});
         }
+
         if (!user.validPassword(password)) {
             return done(null, false, {message: 'Wrong password.'});
         }
-        
+
         return done(null, user);
     });
+}));
+
+passport.use('admin.local.signin', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback: true
+}, function(req, email, password, done) {
+  req.checkBody('email', 'Invalid email').notEmpty().isEmail();
+  req.checkBody('password', 'Invalid password').notEmpty();
+  var errors = req.validationErrors();
+  console.log(type);
+  if (errors) {
+      var messages = [];
+      errors.forEach(function(error) {
+          messages.push(error.msg);
+      });
+      return done(null, false, req.flash('error', messages));
+  }
+  User.findOne({'email': email}, function (err, user) {
+      if (err) {
+          return done(err);
+      }
+
+      if (!user) {
+          return done(null, false, {message: 'No user found.'});
+      }
+
+      if (!user.validPassword(password)) {
+          return done(null, false, {message: 'Wrong password.'});
+      }
+      
+      return done(null, user);
+  });
 }));
