@@ -17,7 +17,6 @@ passport.use('local.signup', new LocalStrategy({
     passwordField: 'password',
     passReqToCallback: true
 }, function (req, email, password, done) {
-    console.log(req.body.type);
     req.checkBody('email', 'Invalid email').notEmpty().isEmail();
     req.checkBody('password', 'Invalid password').notEmpty().isLength({min:4});
     var errors = req.validationErrors();
@@ -56,7 +55,6 @@ passport.use('user.local.signin', new LocalStrategy({
     req.checkBody('email', 'Invalid email').notEmpty().isEmail();
     req.checkBody('password', 'Invalid password').notEmpty();
     var errors = req.validationErrors();
-    console.log(type);
     if (errors) {
         var messages = [];
         errors.forEach(function(error) {
@@ -68,7 +66,7 @@ passport.use('user.local.signin', new LocalStrategy({
         if (err) {
             return done(err);
         }
-
+        console.log(user);
         if (!user) {
             return done(null, false, {message: 'No user found.'});
         }
@@ -76,7 +74,9 @@ passport.use('user.local.signin', new LocalStrategy({
         if (!user.validPassword(password)) {
             return done(null, false, {message: 'Wrong password.'});
         }
-
+        if (req.body.type != user.type){
+            return done(null, false, {message: 'Not a user.'});
+        }
         return done(null, user);
     });
 }));
@@ -89,7 +89,6 @@ passport.use('admin.local.signin', new LocalStrategy({
   req.checkBody('email', 'Invalid email').notEmpty().isEmail();
   req.checkBody('password', 'Invalid password').notEmpty();
   var errors = req.validationErrors();
-  console.log(type);
   if (errors) {
       var messages = [];
       errors.forEach(function(error) {

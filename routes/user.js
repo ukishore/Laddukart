@@ -55,7 +55,7 @@ router.get('/signin', function (req, res, next) {
     res.render('user/signin', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
 });
 
-router.post('/signin', passport.authenticate('local.signin', {
+router.post('/signin', passport.authenticate('user.local.signin', {
     failureRedirect: '/user/signin',
     failureFlash: true
 }), function (req, res, next) {
