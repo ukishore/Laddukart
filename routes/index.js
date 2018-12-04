@@ -10,7 +10,7 @@ router.get('/', function (req, res, next) {
     var successMsg = req.flash('success')[0];
     Product.find(function (err, docs) {
         var productChunks = [];
-        var chunkSize = 3;
+        var chunkSize = 4;
         for (var i = 0; i < docs.length; i += chunkSize) {
             productChunks.push(docs.slice(i, i + chunkSize));
         }
@@ -18,15 +18,16 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/add-to-cart/:id', function(req, res, next) {
+router.get('/add-to-cart/:id/:qty', function(req, res, next) {
     var productId = req.params.id;
+    var qty = Number(req.params.qty);
     var cart = new Cart(req.session.cart ? req.session.cart : {});
 
     Product.findById(productId, function(err, product) {
        if (err) {
            return res.redirect('/');
        }
-        cart.add(product, product.id);
+        cart.add(product, product.id, qty);
         req.session.cart = cart;
         console.log(req.session.cart);
         res.redirect('/');
