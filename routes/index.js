@@ -69,6 +69,25 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     res.render('shop/checkout', {total: cart.totalPrice, errMsg: errMsg, noError: !errMsg});
 });
 
+router.get('/rate/:id/:rating', isLoggedIn, function(req, res, next){
+  let rating = Number(req.params.rating);
+  let id = req.params.id;
+
+  console.log(id);
+  Product.findById(id, function(err, product) {
+    if (err) {
+        return res.redirect('/');
+    }
+    
+    let count = product.rateCount;
+    let currRate = product.rating;
+    product.rating = ((currRate * count) + rating )/(count+1);
+    product.rateCount++;
+    product.save();
+  });
+  res.redirect('/');
+});
+
 router.post('/checkout', isLoggedIn, function(req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');

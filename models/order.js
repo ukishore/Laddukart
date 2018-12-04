@@ -6,6 +6,7 @@ var schema = new Schema({
     cart: {type: Object, required: true},
     address: {type: String, required: true},
     name: {type: String, required: true},
+    rating: {type: Number, default: 3},
     paymentId: {type: String, required: true}
 });
 

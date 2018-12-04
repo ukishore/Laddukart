@@ -1,7 +1,5 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2">
-        <h1>User Profile</h1>
-        <hr>
         <h2>My Orders</h2>
         {{# each orders }}
             <div class="panel panel-default">
@@ -9,14 +7,30 @@
                     <ul class="list-group">
                         {{# each this.items }}
                             <li class="list-group-item">
-                                <span class="badge">{{ this.price }}</span>
-                                {{ this.item.title }} | {{ this.qty }} Units
+                                <span class="badge">₹ {{ this.price }} </span> 
+                                {{ this.item.title }} | {{ this.qty }} KG 
+                          
+                           
+                            <div class="btn-group pull-right">
+                            <button class="btn btn-primary  btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Rate <span class="caret"></span></button> &nbsp;
+                            <ul class="dropdown-menu">
+                                <li><a href="/rate/{{this.item._id}}/1">Very Bad</a></li>
+                                <li><a href="/rate/{{this.item._id}}/2">Bad</a></li>
+                                <li><a href="/rate/{{this.item._id}}/3">Alright</a></li>
+                                <li><a href="/rate/{{this.item._id}}/4">Good</a></li>
+                                <li><a href="/rate/{{this.item._id}}/5">Very Good</a></li>
+      
+                            </ul>
+                            
+                      </div>
+
                             </li>
+
                         {{/each}}
                     </ul>
                 </div>
                 <div class="panel-footer">
-                    <strong>Total Price: ${{ this.cart.totalPrice }}</strong>
+                    <strong>Total Price: ₹{{ this.cart.totalPrice }}</strong>
                 </div>
             </div>
         {{/each}}
