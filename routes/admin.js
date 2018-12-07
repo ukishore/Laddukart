@@ -10,7 +10,7 @@ var csrfProtection = csrf();
 router.use(csrfProtection);
 
 router.get('/',isLoggedIn ,function (req, res, next) {
-  res.render('admin/home');
+  res.render('admin/home', {layout:'adminLayout'});
 });
 
 router.get('/signin', isNotLoggedIn, function (req, res, next) {
