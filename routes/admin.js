@@ -4,8 +4,9 @@ var csrf = require('csurf');
 var passport = require('passport');
 
 var Order = require('../models/order');
+var User = require('../models/user');
 var Cart = require('../models/cart');
-
+var Product = require('../models/product')
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
@@ -13,11 +14,21 @@ router.get('/',isLoggedIn ,function (req, res, next) {
 
   Order.find({}, function(err, orders) {
     if (err) {
-        return res.write('Error!');
+        return res.write('Error getting orders!');
     }
-    console.log(orders);
-    res.render('admin/home', {layout:'adminLayout', orders: orders });
-    
+    User.find({}, function(err, users) {
+      if (err) {
+        return res.write('Error getting users!');
+      }
+      Product.find({}, function (err, laddus) {
+        if (err) {
+          return res.write('Error getting Laddus!');
+        }
+        res.render('admin/home', {layout:'adminLayout', orders: orders, users: users, laddus: laddus});
+      });
+      
+    });
+   
   });
 });
 

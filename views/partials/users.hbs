@@ -1,0 +1,27 @@
+<h2>Users</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {{#each users}}
+                  <tr>
+                  <td>{{this._id}}</td>
+                  <td>{{this.fName}}</td>
+                  <td>{{this.lName}}</td>
+                  <td>{{this.email}}</td>
+                  <td>{{this.phone}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+
+          </div>

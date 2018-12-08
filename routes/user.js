@@ -5,11 +5,13 @@ var passport = require('passport');
 
 var Order = require('../models/order');
 var Cart = require('../models/cart');
+var User = require('../models/user');
 
 var csrfProtection = csrf();
 router.use(csrfProtection);
 
 router.get('/profile', isLoggedIn, function (req, res, next) {
+    var successMsg = req.flash('success')[0];
     Order.find({user: req.user}, function(err, orders) {
         if (err) {
             return res.write('Error!');
@@ -19,9 +21,25 @@ router.get('/profile', isLoggedIn, function (req, res, next) {
             cart = new Cart(order.cart);
             order.items = cart.generateArray();
         });
-        res.render('user/profile', { orders: orders });
+        res.render('user/profile', {csrfToken: req.csrfToken(), orders: orders, successMsg: successMsg, email: req.user.email, phone: req.user.phone, fName: req.user.fName, lName: req.user.lName });
     });
 });
+
+router.post('/updateProfile', isLoggedIn, function(req, res, next) {
+    console.log(req.body);
+    User.findByIdAndUpdate(
+      req.user._id,
+      req.body,
+      {new: false},
+      function (err, user) {
+        if (err) {
+          res.write("Failed to update user");
+        }
+        req.flash('success','Successfully updated user details');
+        res.redirect('/user/profile');
+      });
+  });
+
 
 router.get('/logout', isLoggedIn, function (req, res, next) {
     req.logout();
