@@ -13,6 +13,11 @@ router.get('/',isLoggedIn ,function (req, res, next) {
   res.render('admin/home', {layout:'adminLayout'});
 });
 
+router.get('/logout', isLoggedIn, function (req, res, next) {
+  req.logout();
+  res.redirect('/admin/signin');
+});
+
 router.get('/signin', isNotLoggedIn, function (req, res, next) {
     var messages = req.flash('error');
     res.render('admin/signin', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
