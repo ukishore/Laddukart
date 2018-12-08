@@ -1,0 +1,34 @@
+<h2>Orders</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Buyer</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Payment ID</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each orders}}
+                  <tr>
+                  <td>{{this._id}}</td>
+                  <td>{{this.name}}</td>
+                  <td>{{this.cart.totalQty}}</td>
+                  <td>₹ {{this.cart.totalPrice}}</td>
+                  <td>{{this.paymentId}}</th>
+                  <td>
+                    {{#if this.isDispatched}}
+                        <a href="#">Dispatched</a>
+                    {{else}}
+                        <a href="#">Dispatch</a>
+                    {{/if}}
+                  </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+
+          </div>

@@ -10,7 +10,15 @@ var csrfProtection = csrf();
 router.use(csrfProtection);
 
 router.get('/',isLoggedIn ,function (req, res, next) {
-  res.render('admin/home', {layout:'adminLayout'});
+
+  Order.find({}, function(err, orders) {
+    if (err) {
+        return res.write('Error!');
+    }
+    console.log(orders);
+    res.render('admin/home', {layout:'adminLayout', orders: orders });
+    
+  });
 });
 
 router.get('/logout', isLoggedIn, function (req, res, next) {
@@ -23,6 +31,8 @@ router.get('/signin', isNotLoggedIn, function (req, res, next) {
     res.render('admin/signin', {csrfToken: req.csrfToken(), messages: messages, hasErrors: messages.length > 0});
 });
 
+
+
 router.post('/signin', passport.authenticate('admin.local.signin', {
     failureRedirect: '/admin/signin',
     failureFlash: true
@@ -31,6 +41,7 @@ router.post('/signin', passport.authenticate('admin.local.signin', {
         var oldUrl = req.session.oldUrl;
         req.session.oldUrl = null;
         res.redirect(oldUrl);
+        console.log(req.session.oldUrl)
     } else {
         res.redirect('/admin/');
     }
