@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var csrf = require('csurf');
 var passport = require('passport');
-
+var fileUpload = require('express-fileupload');
 var Order = require('../models/order');
 var User = require('../models/user');
 var Cart = require('../models/cart');
@@ -24,12 +24,20 @@ router.get('/',isLoggedIn ,function (req, res, next) {
         if (err) {
           return res.write('Error getting Laddus!');
         }
-        res.render('admin/home', {layout:'adminLayout', orders: orders, users: users, laddus: laddus});
+        res.render('admin/home', {layout:'adminLayout', csrfToken: req.csrfToken(), orders: orders, users: users, laddus: laddus});
       });
-      
     });
-   
   });
+});
+
+router.get('/dispatch/:id', isLoggedIn, function(req, res, next) {
+  let id = req.params.id;
+  Order.findByIdAndUpdate(id, {$set : {isDispatched: true}}, function(err , out) {
+    if (err) {
+      return res.write('Unable to update shit!');
+    }
+    res.redirect('/admin/')
+  })
 });
 
 router.get('/logout', isLoggedIn, function (req, res, next) {
@@ -43,19 +51,39 @@ router.get('/signin', isNotLoggedIn, function (req, res, next) {
 });
 
 
+router.post('/addLaddu', isLoggedIn, function(req, res, next) {
+  uploadImage(req, res);
+  let product = new Product({
+    title: req.body.ladduNameInput,
+    ingredients: req.body.ingredientsInput,
+    howTo: req.body.recipyInput,
+    price: req.body.priceInput,
+    imagePath: '/images/'+req.body.ladduNameInput+'.jpg'
+  })
+  product.save(function(err, laddu) {
+    if (err) {
+      res.write('Unable to add laddu');
+    }
+    res.redirect('/admin/')
+  })
+});
+
+function uploadImage(req, res) {
+  if (Object.keys(req.files).length == 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  let ladduFile = req.files.imageInput;
+  ladduFile.mv('public/images/'+req.body.ladduNameInput+'.jpg', function(err) {
+    if (err)
+      return res.status(500).send(err);
+  });
+}
 
 router.post('/signin', passport.authenticate('admin.local.signin', {
     failureRedirect: '/admin/signin',
     failureFlash: true
 }), function (req, res, next) {
-    if (req.session.oldUrl) {
-        var oldUrl = req.session.oldUrl;
-        req.session.oldUrl = null;
-        res.redirect(oldUrl);
-        console.log(req.session.oldUrl)
-    } else {
-        res.redirect('/admin/');
-    }
+  res.redirect('/admin/');
 });
 
 

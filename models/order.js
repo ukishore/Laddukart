@@ -8,8 +8,7 @@ var schema = new Schema({
     name: {type: String, required: true},
     rating: {type: Number, default: 3},
     paymentId: {type: String, required: true},
-    isDispatched: {type: Boolean, default: false},
-    date: {type: Date, required: true}
+    isDispatched: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('Order', schema);

@@ -16,11 +16,16 @@ router.get('/profile', isLoggedIn, function (req, res, next) {
         if (err) {
             return res.write('Error!');
         }
+        
         var cart;
         orders.forEach(function(order) {
             cart = new Cart(order.cart);
             order.items = cart.generateArray();
+            order.items.forEach(function(item) {
+              item.isDispatched = order.isDispatched;
+            })
         });
+        
         res.render('user/profile', {csrfToken: req.csrfToken(), orders: orders, successMsg: successMsg, email: req.user.email, phone: req.user.phone, fName: req.user.fName, lName: req.user.lName });
     });
 });

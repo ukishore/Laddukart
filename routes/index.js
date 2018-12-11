@@ -100,7 +100,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
     console.log(req.body.stripeToken);
     stripe.charges.create({
         amount: cart.totalPrice * 100,
-        currency: "rs",
+        currency: "inr",
         source: req.body.stripeToken, // obtained with Stripe.js
         description: "Laddu Purchases"
     }, function(err, charge) {
@@ -115,7 +115,6 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
             address: req.body.address,
             name: req.body.name,
             paymentId: charge.id,
-            date: date.getDate+'-'+date.Month+'-'+date.getFullYear
         });
         order.save(function(err, result) {
             req.flash('success', 'Successfully bought product!');

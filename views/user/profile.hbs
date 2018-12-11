@@ -43,16 +43,25 @@
     {{#if orders}}
     <div class="col-md-8 col-md-offset-2">
         <h2>My Orders</h2>
-        {{# each orders }}
+        {{#each orders }}
             <div class="panel panel-default">
                 <div class="panel-body">
                     <ul class="list-group">
-                        {{# each this.items }}
+                        {{#each this.items }}
+                        
+                        
                             <li class="list-group-item">
-                                <span class="badge">₹ {{ this.price }} </span> 
-                                {{ this.item.title }} | {{ this.qty }} KG 
-                          
-                           
+                               
+                                {{#if this.isDispatched}}
+                                
+                              <span class="badge">Dispatched</span>
+                              {{else}}
+                              <span class="badge">Being Processed</span>
+                              {{/if}}
+                                {{ this.item.title }} | ₹ {{ this.price }} <br>
+                              {{ this.qty }} KG
+                    
+                            
                             <div class="btn-group pull-right">
                             <button class="btn btn-primary  btn-xs dropdown-toggle" type="button" data-toggle="dropdown">Rate <span class="caret"></span></button> &nbsp;
                             <ul class="dropdown-menu">
@@ -64,9 +73,9 @@
       
                             </ul>
                             
-                      </div>
+                          </div>
 
-                            </li>
+                        </li>
 
                         {{/each}}
                     </ul>
