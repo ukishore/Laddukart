@@ -7,14 +7,24 @@ var Order = require('../models/order');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    var successMsg = req.flash('success')[0];
+    const successMsg = req.flash('success')[0];
+    let index = Number(req.query.index);
+    if (!index) index = 1;
     Product.find(function (err, docs) {
         var productChunks = [];
         var chunkSize = 4;
-        for (var i = 0; i < docs.length; i += chunkSize) {
+        var nextIndex;
+        var prevIndex;
+        for (var i = 0+((index-1)*8); i < 8+((index-1)*8); i += chunkSize) {
             productChunks.push(docs.slice(i, i + chunkSize));
         }
-        res.render('shop/index', {title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessages: !successMsg});
+        if (docs.length > 8+((index-1)*8)) {
+          nextIndex = index + 1;
+        }
+        if (index > 1) {
+          prevIndex = index - 1;
+        }
+        res.render('shop/index', {title: 'Shopping Cart',index: index, nextIndex: nextIndex, prevIndex: prevIndex, products: productChunks, successMsg: successMsg, noMessages: !successMsg});
     });
 });
 

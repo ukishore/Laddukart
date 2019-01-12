@@ -58,6 +58,34 @@
         {{/each}}
     </div>
 {{/each}}
+
+<nav aria-label="Page navigation example" style="margin-left:44%">
+  <ul class="pagination pagination-lg">
+    <li class="page-item {{#if prevIndex}}{{else}}disabled{{/if}}">
+      <a class="page-link" href="/?index={{{prevIndex}}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    {{#if prevIndex}}
+    <li class="page-item"><a class="page-link" href="/?index={{{prevIndex}}}">{{{prevIndex}}}</a></li>
+    {{/if}}
+    <li class="page-item active">
+      <span class="page-link">{{{index}}}
+        <span class="sr-only">(current)</span>
+      </span>
+      </li>
+      {{#if nextIndex}}
+    <li class="page-item"><a class="page-link" href="/?index={{{nextIndex}}}">{{{nextIndex}}}</a></li>
+    {{/if}}
+    <li class="page-item {{#if nextIndex}}{{else}}disabled{{/if}}">
+      <a class="page-link" href="/?index={{{nextIndex}}}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
 <script>
   function addToCart(id){
      const quantity = document.getElementById(id+"qty").value/1000;
