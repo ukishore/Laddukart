@@ -5,6 +5,21 @@ var Cart = require('../models/cart');
 var Product = require('../models/product');
 var Order = require('../models/order');
 
+
+router.post('/search', function(req, res, next) {
+  const searchKey = req.body.searchKey;
+  Product.find({"title":new RegExp(searchKey, "i")}, function (err, results) {
+    if (err) res.send("Bad server gateway!");
+    var productChunks = [];
+    var chunkSize = 4;
+
+    for (var i = 0; i < results.length; i += chunkSize) {
+        productChunks.push(results.slice(i, i + chunkSize));
+    }
+    res.render('shop/index', {title: 'Shopping Cart', search:false, products: productChunks,noMessages: true});
+  }); 
+});
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     const successMsg = req.flash('success')[0];
@@ -24,7 +39,7 @@ router.get('/', function (req, res, next) {
         if (index > 1) {
           prevIndex = index - 1;
         }
-        res.render('shop/index', {title: 'Shopping Cart',index: index, nextIndex: nextIndex, prevIndex: prevIndex, products: productChunks, successMsg: successMsg, noMessages: !successMsg});
+        res.render('shop/index', {title: 'Shopping Cart',index: index, search: !false, nextIndex: nextIndex, prevIndex: prevIndex, products: productChunks, successMsg: successMsg, noMessages: !successMsg});
     });
 });
 
