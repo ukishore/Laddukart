@@ -33,7 +33,7 @@ router.get('/dispatch/:id', isLoggedIn, function(req, res, next) {
   let id = req.params.id;
   Order.findByIdAndUpdate(id, {$set : {isDispatched: true}}, function(err , out) {
     if (err) {
-      return res.write('Unable to update shit!');
+      return res.write('Unable to update!');
     }
     res.redirect('/admin/')
   })

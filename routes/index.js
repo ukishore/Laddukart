@@ -107,6 +107,7 @@ router.get('/rate/:id/:rating', isLoggedIn, function(req, res, next){
     let count = product.rateCount;
     let currRate = product.rating;
     product.rating = ((currRate * count) + rating )/(count+1);
+    product.rating = product.rating.toFixed(1);
     product.rateCount++;
     product.save();
   });
