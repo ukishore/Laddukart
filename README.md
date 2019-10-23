@@ -1,2 +1,2 @@
 ## Laddukart
-A website built using MEN stack for selling laddus
+A website built on top of MEN stack for selling laddus.
